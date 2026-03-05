@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Stream Portal</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Register for Live Streaming</h1>
+<input type="text" id="username" placeholder="Username">
+<button onclick="register()">Register</button>
+
+<div id="info"></div>
+
+<script>
+async function register(){
+    const username = document.getElementById('username').value;
+    const res = await fetch('http://localhost:3000/register',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({username})
+    });
+    const data = await res.json();
+    if(data.error){
+        document.getElementById('info').innerText = data.error;
+    }else{
+        document.getElementById('info').innerHTML = `
+        <p>Username: ${data.username}</p>
+        <p>Stream Key: ${data.streamKey}</p>
+        <p>RTMP URL: rtmp://YOUR_DOMAIN/live/${data.streamKey}</p>
+        <p>M3U8 URL: http://YOUR_DOMAIN:8080/hls/${data.streamKey}.m3u8</p>`;
+    }
+}
+</script>
+</body>
+</html>
