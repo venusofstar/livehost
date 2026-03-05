@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>Register for Live Streaming</h1>
-<input type="text" id="username" placeholder="Username">
+<input type="text" id="username" placeholder="Enter username">
 <button onclick="register()">Register</button>
 
 <div id="info"></div>
@@ -16,6 +16,8 @@
 <script>
 async function register(){
     const username = document.getElementById('username').value;
+    if(!username) { alert('Enter username'); return; }
+
     const res = await fetch('http://127.0.0.1:3000/register',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -26,10 +28,11 @@ async function register(){
         document.getElementById('info').innerText = data.error;
     }else{
         document.getElementById('info').innerHTML = `
-        <p>Username: ${data.username}</p>
-        <p>Stream Key: ${data.streamKey}</p>
-        <p>RTMP URL: rtmp://YOUR_DOMAIN/live/${data.streamKey}</p>
-        <p>M3U8 URL: http://YOUR_DOMAIN:8080/hls/${data.streamKey}.m3u8</p>`;
+        <p>Username: <b>${data.username}</b></p>
+        <p>Stream Key: <b>${data.streamKey}</b></p>
+        <p>RTMP URL: <b>${data.rtmp}</b></p>
+        <p>M3U8 Link: <b>${data.m3u8}</b></p>
+        <p>Playlist for IPTV: <a href="http://YOUR_DOMAIN:3000/playlist.m3u">Click here</a></p>`;
     }
 }
 </script>
